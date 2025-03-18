@@ -1,8 +1,35 @@
-# React + Vite
+📦 E-Commerce Deportivo con React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+📝 Descripción
 
-Currently, two official plugins are available:
+Este es un proyecto de e-commerce de productos deportivos desarrollado con React y Firebase. Permite a los usuarios navegar por un catálogo de productos, agregar artículos al carrito y finalizar su compra a través de un formulario de checkout.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🚀 Tecnologías utilizadas
+
+React: Para la estructura de componentes y renderizado dinámico.
+
+React Router: Para la navegación entre páginas.
+
+Firebase Firestore: Base de datos NoSQL utilizada para almacenar los productos y las órdenes de compra.
+
+Bootstrap: Para el diseño responsivo y estilización.
+
+SweetAlert2: Para mejorar la experiencia del usuario con alertas visuales.
+
+📌 Funcionalidades
+
+📂 Catálogo de productos con datos obtenidos desde Firestore.
+
+🔍 Filtrado de productos por categorías.
+
+🛒 Carrito de compras con opciones para agregar y eliminar productos.
+
+📑 Detalle de producto con información detallada e imágenes.
+
+💰 Cálculo del total de la compra.
+
+📝 Formulario de Checkout con validación de datos.
+
+🔔 Mensajes de confirmación de compra con SweetAlert2.
+
+⏳ Loaders visuales para mejorar la experiencia de usuario.

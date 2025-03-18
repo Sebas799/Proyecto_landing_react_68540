@@ -1,54 +1,46 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../components/Firebase/config";
+import { HashLoader } from "react-spinners";
+import ItemList from "./ItemList";
 
 function ItemListContainer({ mensaje }) {
   const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulación de datos de productos
-    const fakeProducts = [
-      { id: '1', name: 'Producto 1', category: 'electronica', description: 'Descripción del producto 1' },
-      { id: '2', name: 'Producto 2', category: 'ropa', description: 'Descripción del producto 2' },
-      { id: '3', name: 'Producto 3', category: 'electronica', description: 'Descripción del producto 3' },
-      { id: '4', name: 'Producto 4', category: 'ropa', description: 'Descripción del producto 4' },
-    ];
+    setLoading(true);
+    const collectionRef = collection(db, "productos");
+    const q = categoryId ? query(collectionRef, where("category", "==", categoryId)) : collectionRef;
 
-    const getProducts = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(fakeProducts);
-      }, 1000);
-    });
-
-    getProducts.then((data) => {
-      if (categoryId) {
-        setProducts(data.filter((item) => item.category === categoryId));
-      } else {
-        setProducts(data);
-      }
-    });
+    getDocs(q)
+      .then((snapshot) => {
+        const productsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productsData);
+      })
+      .catch((error) => console.error("Error obteniendo productos:", error))
+      .finally(() => setLoading(false));
   }, [categoryId]);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <HashLoader color="#000000" size={50} />
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-4">
       <h2>
         {mensaje} {categoryId && `- Categoría: ${categoryId}`}
       </h2>
-      <div className="row">
-        {products.map((product) => (
-          <div key={product.id} className="col-md-4">
-            <div className="card mb-3">
-              <div className="card-body">
-                <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">{product.description}</p>
-                <Link to={`/detail/${product.id}`} className="btn btn-primary">
-                  Ver detalle
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ItemList products={products} />
     </div>
   );
 }

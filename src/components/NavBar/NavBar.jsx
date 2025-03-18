@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
-import CartWidget from '../CartWidget/CartWidget';
+import { Link } from "react-router-dom";
+import CartWidget from "../CartWidget/CartWidget";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function NavBar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand fs-3" to="/">
-          ✨ Mi Tienda ✨
+          💪🏼 TIENDA FITNESS 💪🏼
         </Link>
         <button
           className="navbar-toggler"
@@ -29,8 +29,8 @@ function NavBar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fs-5" to="/category/electronica">
-                Electrónica
+              <Link className="nav-link fs-5" to="/category/suplemento">
+                Suplementos
               </Link>
             </li>
             <li className="nav-item">

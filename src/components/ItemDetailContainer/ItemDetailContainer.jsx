@@ -1,44 +1,51 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import ItemCount from '../ItemCount/ItemCount';
+import { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../components/Firebase/config';
+import ItemDetail from '../ItemDetailContainer/ItemDetail';
+import { CartContext } from '../Context/CartContext';
+import { HashLoader } from 'react-spinners';
 
 function ItemDetailContainer() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulación de obtención de un producto por ID
-    const fakeProduct = {
-      id: productId,
-      name: `Producto ${productId}`,
-      category: 'electronica',
-      description: `Detalle del producto ${productId}`,
-      price: 100 * parseInt(productId),
-    };
-
-    const getProduct = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(fakeProduct);
-      }, 1000);
-    });
-
-    getProduct.then((data) => {
-      setProduct(data);
-    });
+    setLoading(true);
+    const docRef = doc(db, 'productos', productId);
+    getDoc(docRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          setProduct({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          console.error("No se encontró el producto");
+        }
+      })
+      .catch((error) => console.error("Error obteniendo el producto:", error))
+      .finally(() => setLoading(false));
   }, [productId]);
 
-  if (!product) {
-    return <div className="container mt-4">Cargando...</div>;
+  const handleAddToCart = (quantity) => {
+    addToCart(product, quantity);
+    setAddedToCart(true);
+    navigate(-1);
+  };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <HashLoader color="#000000" size={50} />
+      </div>
+    );
   }
 
   return (
     <div className="container mt-4">
-      <h2>{product.name}</h2>
-      <p>{product.description}</p>
-      <p>
-        <strong>Precio:</strong> ${product.price}
-      </p>
-      <ItemCount initial={1} stock={10} />
+      <ItemDetail product={product} onAdd={handleAddToCart} addedToCart={addedToCart} />
     </div>
   );
 }

@@ -1,10 +1,19 @@
+import { useCart } from "../Context/CartContext";
+import { useNavigate } from "react-router-dom";
+
 function CartWidget() {
-    return (
-      <div className="text-light p-3 fs-5">
-        🛒 <span>(0)</span>
-      </div>
-    );
-  }
-  
-  export default CartWidget;
-  
+  const { cart } = useCart();
+  const navigate = useNavigate();
+
+  const goToCart = () => {
+    navigate("/cart");
+  };
+
+  return (
+    <div className="text-light p-3 fs-5" onClick={goToCart} style={{ cursor: "pointer" }}>
+      🛒 <span>({cart.length})</span>
+    </div>
+  );
+}
+
+export default CartWidget;
